@@ -8,7 +8,7 @@ import {
 } from '../services/contacts.js';
 
 export const getContactsController = async (req, res) => {
-  const contacts = await getAllContacts();
+  const contacts = await getAllContacts(req.query);
 
   res.status(200).json({
     status: 200,
