@@ -1,6 +1,6 @@
 import { ContactsCollection } from '../db/models/contact.js';
 
-export const getAllContacts = async (query = {}) => {
+export const getAllContacts = async (query = {}, userId) => {
   const {
     page = 1,
     perPage = 10,
@@ -13,8 +13,8 @@ export const getAllContacts = async (query = {}) => {
   const skip = (page - 1) * perPage;
   const limit = parseInt(perPage);
 
-  // Створюємо фільтр
-  const filter = {};
+  // Створюємо фільтр з userId
+  const filter = { userId };
   if (type) {
     filter.contactType = type;
   }
@@ -46,8 +46,8 @@ export const getAllContacts = async (query = {}) => {
   };
 };
 
-export const getContactById = async contactId => {
-  const contact = await ContactsCollection.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  const contact = await ContactsCollection.findOne({ _id: contactId, userId });
   return contact;
 };
 
@@ -56,9 +56,14 @@ export const createContact = async contactData => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, options = {}) => {
+export const updateContact = async (
+  contactId,
+  payload,
+  userId,
+  options = {}
+) => {
   const rawResult = await ContactsCollection.findOneAndUpdate(
-    { _id: contactId },
+    { _id: contactId, userId },
     payload,
     {
       new: true,
@@ -72,9 +77,10 @@ export const updateContact = async (contactId, payload, options = {}) => {
   return rawResult.value;
 };
 
-export const deleteContact = async contactId => {
+export const deleteContact = async (contactId, userId) => {
   const contact = await ContactsCollection.findOneAndDelete({
     _id: contactId,
+    userId,
   });
 
   return contact;
