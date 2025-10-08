@@ -13,12 +13,16 @@ let transporter = null;
 if (smtpHost && smtpPort && smtpUser && smtpPassword) {
   transporter = nodemailer.createTransport({
     host: smtpHost,
-    port: smtpPort,
+    port: parseInt(smtpPort),
+    secure: false, // true for 465, false for other ports
     auth: {
       user: smtpUser,
       pass: smtpPassword,
     },
   });
+  console.log('SMTP transporter configured successfully');
+} else {
+  console.log('SMTP not configured - missing credentials');
 }
 
 export const sendResetPasswordEmail = async (to, token) => {
