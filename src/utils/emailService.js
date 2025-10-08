@@ -1,20 +1,37 @@
 import nodemailer from 'nodemailer';
-import { getEnvVar } from './getEnvVar.js';
 
-const transporter = nodemailer.createTransport({
-  host: getEnvVar('SMTP_HOST'),
-  port: getEnvVar('SMTP_PORT'),
-  auth: {
-    user: getEnvVar('SMTP_USER'),
-    pass: getEnvVar('SMTP_PASSWORD'),
-  },
-});
+// Перевіряємо чи є всі SMTP креденшили
+const smtpHost = process.env.SMTP_HOST;
+const smtpPort = process.env.SMTP_PORT;
+const smtpUser = process.env.SMTP_USER;
+const smtpPassword = process.env.SMTP_PASSWORD;
+const smtpFrom = process.env.SMTP_FROM;
+const appDomain = process.env.APP_DOMAIN;
+
+let transporter = null;
+
+if (smtpHost && smtpPort && smtpUser && smtpPassword) {
+  transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    auth: {
+      user: smtpUser,
+      pass: smtpPassword,
+    },
+  });
+}
 
 export const sendResetPasswordEmail = async (to, token) => {
-  const resetLink = `${getEnvVar('APP_DOMAIN')}/reset-password?token=${token}`;
+  // Якщо SMTP не налаштований, кидаємо помилку
+  if (!transporter || !smtpFrom || !appDomain) {
+    console.warn('SMTP not configured, cannot send email');
+    throw new Error('Email service not configured');
+  }
+
+  const resetLink = `${appDomain}/reset-password?token=${token}`;
 
   const mailOptions = {
-    from: getEnvVar('SMTP_FROM'),
+    from: smtpFrom,
     to,
     subject: 'Reset Your Password',
     html: `
@@ -28,8 +45,8 @@ export const sendResetPasswordEmail = async (to, token) => {
 
   try {
     await transporter.sendMail(mailOptions);
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
+  } catch {
+    console.error('Error sending email');
+    throw new Error('Failed to send email');
   }
 };

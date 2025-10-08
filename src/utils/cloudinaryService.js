@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { getEnvVar } from './getEnvVar.js';
 
 // Перевіряємо чи є всі креденшили
 const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
