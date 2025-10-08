@@ -42,7 +42,7 @@ export const createContactController = async (req, res) => {
   if (req.file) {
     try {
       photoUrl = await uploadImage(req.file);
-    } catch (_error) {
+    } catch {
       throw createHttpError(500, 'Failed to upload photo');
     }
   }
@@ -64,7 +64,7 @@ export const patchContactController = async (req, res) => {
   if (req.file) {
     try {
       photoUrl = await uploadImage(req.file);
-    } catch (_error) {
+    } catch {
       throw createHttpError(500, 'Failed to upload photo');
     }
   }
