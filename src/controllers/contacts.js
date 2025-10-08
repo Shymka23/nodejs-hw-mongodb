@@ -1,4 +1,5 @@
 import createHttpError from 'http-errors';
+import { uploadImage } from '../utils/cloudinaryService.js';
 import {
   getAllContacts,
   getContactById,
@@ -36,7 +37,17 @@ export const getContactByIdController = async (req, res) => {
 
 export const createContactController = async (req, res) => {
   const userId = req.user._id;
-  const contact = await createContact({ ...req.body, userId });
+  let photoUrl = null;
+
+  if (req.file) {
+    try {
+      photoUrl = await uploadImage(req.file);
+    } catch {
+      throw createHttpError(500, 'Failed to upload photo');
+    }
+  }
+
+  const contact = await createContact({ ...req.body, userId, photo: photoUrl });
 
   res.status(201).json({
     status: 201,
@@ -48,7 +59,21 @@ export const createContactController = async (req, res) => {
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
   const userId = req.user._id;
-  const result = await updateContact(contactId, req.body, userId);
+  let photoUrl = null;
+
+  if (req.file) {
+    try {
+      photoUrl = await uploadImage(req.file);
+    } catch {
+      throw createHttpError(500, 'Failed to upload photo');
+    }
+  }
+
+  const result = await updateContact(
+    contactId,
+    { ...req.body, ...(photoUrl && { photo: photoUrl }) },
+    userId
+  );
 
   if (!result) {
     throw createHttpError(404, 'Contact not found');
