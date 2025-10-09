@@ -14,11 +14,15 @@ if (smtpHost && smtpPort && smtpUser && smtpPassword) {
   transporter = nodemailer.createTransport({
     host: smtpHost,
     port: parseInt(smtpPort),
-    secure: false, // true for 465, false for other ports
+    secure: parseInt(smtpPort) === 465, // true for 465, false for 587/others
     auth: {
       user: smtpUser,
       pass: smtpPassword,
     },
+    connectionTimeout: 10000, // 10s
+    greetingTimeout: 10000, // 10s
+    socketTimeout: 10000, // 10s
+    tls: { rejectUnauthorized: false },
   });
   console.log('SMTP transporter configured successfully');
 } else {
@@ -47,10 +51,20 @@ export const sendResetPasswordEmail = async (to, token) => {
     `,
   };
 
+  // fail-fast захист на випадок зависань SMTP
+  const sendMailWithTimeout = async options => {
+    return await Promise.race([
+      transporter.sendMail(options),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('SMTP timeout')), 12000)
+      ),
+    ]);
+  };
+
   try {
-    await transporter.sendMail(mailOptions);
-  } catch {
-    console.error('Error sending email');
+    await sendMailWithTimeout(mailOptions);
+  } catch (e) {
+    console.error('Error sending email', e?.message || e);
     throw new Error('Failed to send email');
   }
 };
