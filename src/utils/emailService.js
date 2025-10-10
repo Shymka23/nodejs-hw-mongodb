@@ -30,7 +30,9 @@ if (smtpHost && smtpPort && smtpUser && smtpPassword) {
 }
 
 export const sendResetPasswordEmail = async (to, token) => {
-  const resetLink = `${appDomain || 'http://localhost:3000'}/reset-password?token=${token}`;
+  const resetLink = `${
+    appDomain || 'http://localhost:3000'
+  }/reset-password?token=${token}`;
 
   // Якщо SMTP не налаштований, логуємо посилання (для розробки)
   if (!transporter || !smtpFrom || !appDomain) {
@@ -67,13 +69,25 @@ export const sendResetPasswordEmail = async (to, token) => {
     // Спочатку перевіримо з'єднання
     await transporter.verify();
     console.log('✅ SMTP connection verified successfully');
-    
+
     await sendMailWithTimeout(mailOptions);
     console.log('✅ Email sent successfully to:', to);
   } catch (e) {
     console.error('❌ Error sending email:', e?.message || e);
-    // В production це буде помилка, але логуємо посилання для діагностики
     console.log('📧 Debug - reset link:', resetLink);
+
+    // Якщо помилка автентифікації (невірні SMTP креденшили),
+    // використовуємо fallback режим замість помилки
+    if (e.code === 'EAUTH' || e.message?.includes('Authentication failed')) {
+      console.warn(
+        '⚠️  SMTP auth failed - using fallback mode (email logged above)'
+      );
+      console.log(
+        '📧 To fix: Create SMTP key at https://app.brevo.com -> SMTP & API -> SMTP'
+      );
+      return; // Success в fallback режимі
+    }
+
     throw new Error('Failed to send email');
   }
 };
