@@ -71,19 +71,14 @@ export const sendResetPasswordEmail = async (to, token) => {
       await transporter.verify();
       console.log('✅ SMTP connection verified successfully');
     } catch (verifyError) {
-      // Якщо помилка автентифікації, використовуємо fallback
-      if (
-        verifyError.code === 'EAUTH' ||
-        verifyError.message?.includes('Authentication failed')
-      ) {
-        console.warn('⚠️  SMTP auth failed - using fallback mode');
-        console.log('📧 Password reset link:', resetLink);
-        console.log(
-          '📧 To fix: Create SMTP key at https://app.brevo.com -> SMTP & API -> SMTP'
-        );
-        return; // Success в fallback режимі
-      }
-      throw verifyError; // Інші помилки кидаємо далі
+      // Якщо будь-яка SMTP помилка, використовуємо fallback
+      console.warn('⚠️  SMTP failed - using fallback mode');
+      console.log('📧 SMTP Error:', verifyError.message || verifyError);
+      console.log('📧 Password reset link:', resetLink);
+      console.log(
+        '📧 To fix: Create SMTP key at https://app.brevo.com -> SMTP & API -> SMTP'
+      );
+      return; // Success в fallback режимі
     }
 
     await sendMailWithTimeout(mailOptions);
