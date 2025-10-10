@@ -113,7 +113,8 @@ export const sendPasswordResetEmail = async email => {
 
   try {
     await sendResetPasswordEmail(email, token);
-  } catch {
+  } catch (error) {
+    console.error('Email sending error:', error.message || error);
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.'

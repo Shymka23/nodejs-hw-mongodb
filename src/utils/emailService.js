@@ -30,24 +30,26 @@ if (smtpHost && smtpPort && smtpUser && smtpPassword) {
 }
 
 export const sendResetPasswordEmail = async (to, token) => {
-  // Якщо SMTP не налаштований, кидаємо помилку
-  if (!transporter || !smtpFrom || !appDomain) {
-    console.warn('SMTP not configured, cannot send email');
-    throw new Error('Email service not configured');
-  }
+  const resetLink = `${appDomain || 'http://localhost:3000'}/reset-password?token=${token}`;
 
-  const resetLink = `${appDomain}/reset-password?token=${token}`;
+  // Якщо SMTP не налаштований, логуємо посилання (для розробки)
+  if (!transporter || !smtpFrom || !appDomain) {
+    console.warn('⚠️  SMTP not configured - DEV MODE');
+    console.log('📧 Password reset link:', resetLink);
+    console.log('📧 Would send to:', to);
+    return; // Success в dev режимі
+  }
 
   const mailOptions = {
     from: smtpFrom,
     to,
     subject: 'Reset Your Password',
     html: `
-      &lt;h1&gt;Password Reset Request&lt;/h1&gt;
-      &lt;p&gt;You have requested to reset your password. Click the link below to reset it:&lt;/p&gt;
-      &lt;a href="${resetLink}"&gt;Reset Password&lt;/a&gt;
-      &lt;p&gt;This link will expire in 5 minutes.&lt;/p&gt;
-      &lt;p&gt;If you didn't request this, please ignore this email.&lt;/p&gt;
+      <h1>Password Reset Request</h1>
+      <p>You have requested to reset your password. Click the link below to reset it:</p>
+      <a href="${resetLink}">Reset Password</a>
+      <p>This link will expire in 5 minutes.</p>
+      <p>If you didn't request this, please ignore this email.</p>
     `,
   };
 
@@ -62,9 +64,16 @@ export const sendResetPasswordEmail = async (to, token) => {
   };
 
   try {
+    // Спочатку перевіримо з'єднання
+    await transporter.verify();
+    console.log('✅ SMTP connection verified successfully');
+    
     await sendMailWithTimeout(mailOptions);
+    console.log('✅ Email sent successfully to:', to);
   } catch (e) {
-    console.error('Error sending email', e?.message || e);
+    console.error('❌ Error sending email:', e?.message || e);
+    // В production це буде помилка, але логуємо посилання для діагностики
+    console.log('📧 Debug - reset link:', resetLink);
     throw new Error('Failed to send email');
   }
 };
