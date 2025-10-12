@@ -10,7 +10,7 @@ import { UsersCollection } from '../db/models/user.js';
 import { SessionsCollection } from '../db/models/session.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
-import { SMTP, TEMPLATES_DIR } from '../constants/index.js';
+import { TEMPLATES_DIR } from '../constants/index.js';
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
@@ -139,7 +139,7 @@ export const requestResetToken = async email => {
 
   try {
     await sendEmail({
-      from: getEnvVar(SMTP.SMTP_FROM),
+      from: getEnvVar('SMTP_FROM'),
       to: email,
       subject: 'Reset your password',
       html,
