@@ -10,8 +10,20 @@ const transporter = nodemailer.createTransport({
     user: getEnvVar(SMTP.SMTP_USER),
     pass: getEnvVar(SMTP.SMTP_PASSWORD),
   },
+  connectionTimeout: 30000, // 30 секунд
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
 });
 
 export const sendEmail = async options => {
+  try {
+    // Спробуємо підключитися спочатку
+    await transporter.verify();
+    console.log('✅ SMTP connection verified');
+  } catch (verifyError) {
+    console.error('❌ SMTP verify failed:', verifyError.message);
+    throw verifyError;
+  }
+
   return await transporter.sendMail(options);
 };
