@@ -1,15 +1,14 @@
 import nodemailer from 'nodemailer';
 
-import { SMTP } from '../constants/index.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 
 const transporter = nodemailer.createTransport({
-  host: getEnvVar(SMTP.SMTP_HOST),
-  port: Number(getEnvVar(SMTP.SMTP_PORT)),
-  secure: Number(getEnvVar(SMTP.SMTP_PORT)) === 465, // true для 465, false для 587
+  host: getEnvVar('SMTP_HOST'),
+  port: Number(getEnvVar('SMTP_PORT')),
+  secure: Number(getEnvVar('SMTP_PORT')) === 465, // true для 465, false для 587
   auth: {
-    user: getEnvVar(SMTP.SMTP_USER),
-    pass: getEnvVar(SMTP.SMTP_PASSWORD),
+    user: getEnvVar('SMTP_USER'),
+    pass: getEnvVar('SMTP_PASSWORD'),
   },
 });
 
