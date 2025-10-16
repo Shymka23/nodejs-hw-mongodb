@@ -1,0 +1,16 @@
+tags:
+  - Contacts
+summary: Отримати контакт за ідентифікатором
+operationId: getContactById
+description: Повертає детальну інформацію про контакт, який належить авторизованому користувачеві.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: '../../../components/parameters/contactId.yaml'
+responses:
+  '200':
+    $ref: '../../../components/responses/getContactSuccess.yaml'
+  '401':
+    $ref: '../../../components/responses/unauthorized.yaml'
+  '404':
+    $ref: '../../../components/responses/contactNotFound.yaml'

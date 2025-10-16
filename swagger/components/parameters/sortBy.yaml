@@ -1,0 +1,13 @@
+name: sortBy
+in: query
+description: Поле для сортування результатів
+schema:
+  type: string
+  enum:
+    - name
+    - email
+    - contactType
+    - isFavourite
+    - createdAt
+    - updatedAt
+  default: name

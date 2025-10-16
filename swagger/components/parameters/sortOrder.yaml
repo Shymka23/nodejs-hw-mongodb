@@ -1,0 +1,9 @@
+name: sortOrder
+in: query
+description: Напрям сортування результатів
+schema:
+  type: string
+  enum:
+    - asc
+    - desc
+  default: asc

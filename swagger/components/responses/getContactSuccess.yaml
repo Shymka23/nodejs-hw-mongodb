@@ -1,0 +1,5 @@
+description: Успішне отримання контакту
+content:
+  application/json:
+    schema:
+      $ref: '../../components/schemas/contactResponse.yaml'

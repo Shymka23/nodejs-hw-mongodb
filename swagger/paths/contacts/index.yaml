@@ -1,0 +1,41 @@
+get:
+  tags:
+    - Contacts
+  summary: Отримати список контактів
+  operationId: getContacts
+  description: Повертає список контактів з підтримкою пагінації та фільтрів.
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: '../../components/parameters/page.yaml'
+    - $ref: '../../components/parameters/perPage.yaml'
+    - $ref: '../../components/parameters/sortBy.yaml'
+    - $ref: '../../components/parameters/sortOrder.yaml'
+    - $ref: '../../components/parameters/type.yaml'
+    - $ref: '../../components/parameters/isFavourite.yaml'
+  responses:
+    '200':
+      $ref: '../../components/responses/getContactsSuccess.yaml'
+    '401':
+      $ref: '../../components/responses/unauthorized.yaml'
+post:
+  tags:
+    - Contacts
+  summary: Створити новий контакт
+  operationId: createContact
+  description: Створює новий контакт для авторизованого користувача.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: '../../components/schemas/createContactRequest.yaml'
+  responses:
+    '201':
+      $ref: '../../components/responses/createContactSuccess.yaml'
+    '400':
+      $ref: '../../components/responses/validationError.yaml'
+    '401':
+      $ref: '../../components/responses/unauthorized.yaml'

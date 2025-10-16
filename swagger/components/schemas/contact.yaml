@@ -1,0 +1,50 @@
+type: object
+properties:
+  _id:
+    type: string
+    description: Ідентифікатор контакту
+    example: 64cfb9c8e5a9f6a6b2f71b3c
+  name:
+    type: string
+    example: Jane Doe
+  phoneNumber:
+    type: string
+    example: '+380971112233'
+  email:
+    type: string
+    format: email
+    example: jane.doe@example.com
+  isFavourite:
+    type: boolean
+    example: false
+  contactType:
+    type: string
+    enum:
+      - work
+      - home
+      - personal
+    example: personal
+  photo:
+    type: string
+    nullable: true
+    example: https://res.cloudinary.com/demo/image/upload/sample.jpg
+  userId:
+    type: string
+    description: Ідентифікатор власника контакту
+    example: 64cfb9c8e5a9f6a6b2f71b3b
+  createdAt:
+    type: string
+    format: date-time
+    example: '2024-02-10T15:30:45.000Z'
+  updatedAt:
+    type: string
+    format: date-time
+    example: '2024-02-12T09:15:20.000Z'
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+  - userId
+  - createdAt
+  - updatedAt

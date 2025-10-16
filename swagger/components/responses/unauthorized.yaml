@@ -1,0 +1,5 @@
+description: Запит без валідного токена доступу
+content:
+  application/json:
+    schema:
+      $ref: '../../components/schemas/errorResponse.yaml'

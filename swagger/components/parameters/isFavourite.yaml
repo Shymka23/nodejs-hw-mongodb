@@ -1,0 +1,5 @@
+name: isFavourite
+in: query
+description: Фільтр контактів за ознакою улюблених
+schema:
+  type: boolean

@@ -1,0 +1,16 @@
+tags:
+  - Contacts
+summary: Видалити контакт
+operationId: deleteContact
+description: Видаляє контакт, що належить авторизованому користувачу.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: '../../../components/parameters/contactId.yaml'
+responses:
+  '204':
+    description: Контакт успішно видалено. Тіло відповіді відсутнє.
+  '401':
+    $ref: '../../../components/responses/unauthorized.yaml'
+  '404':
+    $ref: '../../../components/responses/contactNotFound.yaml'
