@@ -1,0 +1,18 @@
+description: Контакт успішно створено
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: Successfully created a contact!
+        data:
+          $ref: '../../components/schemas/contact.yaml'
+      required:
+        - status
+        - message
+        - data

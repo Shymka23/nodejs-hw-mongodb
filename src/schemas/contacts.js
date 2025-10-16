@@ -14,6 +14,7 @@ const updateContactSchema = Joi.object({
   email: Joi.string().email().optional(),
   isFavourite: Joi.boolean().optional(),
   contactType: Joi.string().valid('work', 'home', 'personal').optional(),
-});
+  photo: Joi.any().optional(), // дозволяємо multipart без обов'язкових полів
+}).min(1); // хоча б одне поле, або фото
 
 export { createContactSchema, updateContactSchema };

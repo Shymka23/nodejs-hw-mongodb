@@ -1,0 +1,8 @@
+name: perPage
+in: query
+description: Кількість елементів на сторінку
+schema:
+  type: integer
+  minimum: 1
+  maximum: 100
+  default: 10

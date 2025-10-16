@@ -1,0 +1,7 @@
+name: contactId
+in: path
+required: true
+description: Унікальний ідентифікатор контакту
+schema:
+  type: string
+  pattern: '^[0-9a-fA-F]{24}$'

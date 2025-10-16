@@ -1,0 +1,24 @@
+tags:
+  - Contacts
+summary: Оновити контакт
+operationId: patchContact
+description: Оновлює дані контакту за ідентифікатором. Підтримує часткове оновлення.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: '../../../components/parameters/contactId.yaml'
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        $ref: '../../../components/schemas/updateContactRequest.yaml'
+responses:
+  '200':
+    $ref: '../../../components/responses/patchContactSuccess.yaml'
+  '400':
+    $ref: '../../../components/responses/validationError.yaml'
+  '401':
+    $ref: '../../../components/responses/unauthorized.yaml'
+  '404':
+    $ref: '../../../components/responses/contactNotFound.yaml'

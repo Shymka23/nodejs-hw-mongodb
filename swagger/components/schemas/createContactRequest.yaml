@@ -1,0 +1,33 @@
+type: object
+properties:
+  name:
+    type: string
+    minLength: 3
+    maxLength: 20
+    example: John Smith
+  phoneNumber:
+    type: string
+    minLength: 3
+    maxLength: 20
+    example: '+380991234567'
+  email:
+    type: string
+    format: email
+    example: john.smith@example.com
+  isFavourite:
+    type: boolean
+    example: false
+  contactType:
+    type: string
+    enum:
+      - work
+      - home
+      - personal
+    example: personal
+  photo:
+    type: string
+    format: binary
+required:
+  - name
+  - phoneNumber
+  - contactType

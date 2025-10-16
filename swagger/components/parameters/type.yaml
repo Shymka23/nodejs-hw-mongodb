@@ -1,0 +1,9 @@
+name: type
+in: query
+description: Фільтр за типом контакту
+schema:
+  type: string
+  enum:
+    - work
+    - home
+    - personal

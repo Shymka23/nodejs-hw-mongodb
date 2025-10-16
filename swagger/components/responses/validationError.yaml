@@ -1,0 +1,5 @@
+description: Порушення вимог валідації запиту
+content:
+  application/json:
+    schema:
+      $ref: '../../components/schemas/errorResponse.yaml'
