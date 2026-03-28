@@ -4,7 +4,7 @@ import {
   loginUserController,
   refreshUserSessionController,
   logoutUserController,
-  sendResetEmailController,
+  requestResetEmailController,
   resetPasswordController,
 } from '../controllers/auth.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
@@ -37,7 +37,7 @@ router.post('/logout', ctrlWrapper(logoutUserController));
 router.post(
   '/send-reset-email',
   validateBody(sendResetEmailSchema),
-  ctrlWrapper(sendResetEmailController)
+  ctrlWrapper(requestResetEmailController)
 );
 
 router.post(
